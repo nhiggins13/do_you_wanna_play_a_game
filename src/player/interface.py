@@ -16,8 +16,8 @@ class Player(ABC):
         else:
             name += str(self._idCounter)
 
-    def reset_score(self, *args, **kwargs):
-        self.score = 0
+    def reset(self):
+        self.score = 0.0
 
     @abstractmethod
     def play_turn(self, *args, **kwargs):

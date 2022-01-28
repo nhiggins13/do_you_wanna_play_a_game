@@ -3,7 +3,7 @@ import logging
 from typing import Union, Any, Dict, Optional, Type
 
 
-def make_factory_class(factory_name: str, factory_label_enum: Optional[Type[enum.enum]] = None):
+def make_factory_class(factory_name: str, factory_label_enum: Optional[Type[enum.Enum]] = None):
     """
     Create a new factory class
 
@@ -33,7 +33,7 @@ class ModelFactory(object):
     """
 
     @classmethod
-    def create(cls, label: str, *args: Any, **kwargs: Any):
+    def create(self, label: str, *args: Any, **kwargs: Any):
         """
 
         :param label:
@@ -42,31 +42,33 @@ class ModelFactory(object):
         :return:
         """
 
-        klass = cls.registry.get(label, None)
+        klass = self.registry.get(label, None)
 
         if not klass:
-            raise ValueError("Factory %s does not have the droid you're looking for(%s)" % (cls.__name__, label))
+            raise ValueError("Factory %s does not have the droid you're looking for(%s)" % (self.__name__, label))
 
         #  Initialize and return object instance
         logger = logging.getLogger(__name__)
         obj = klass(*args, **kwargs)
 
         if logger.hasHandlers():
-            logger.debug("Initialized instance %s of from %s" %(label, cls.__name__))
+            logger.debug("Initialized instance %s of from %s" %(label, self.__name__))
+
+        return obj
 
     @classmethod
-    def register(cls, label: str, klass):
+    def register(self, label: str, klass):
         if not isinstance(label, str):
             raise ValueError('label %s not a string')
 
-        if label in cls.registry:
+        if label in self.registry:
             raise ValueError('Label %s already registered' % label)
 
-        cls.registry[label] = klass
+        self.registry[label] = klass
 
         logger = logging.getLogger(__name__)
         if logger.hasHandlers():
-            logger.debug('"%s" registered in %s' % (label, cls.__name__))
+            logger.debug('"%s" registered in %s' % (label, self.__name__))
 
 
 def register(class_name: str, factory: ModelFactory):
@@ -75,7 +77,7 @@ def register(class_name: str, factory: ModelFactory):
         factory.register(class_name, klass)
         return klass
 
-    return _decorator()
+    return _decorator
 
 
 test = make_factory_class('test')

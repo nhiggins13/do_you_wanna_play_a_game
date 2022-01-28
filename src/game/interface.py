@@ -14,13 +14,13 @@ class Game(ABC):
     def add_player(self, *args, **kwargs):
         pass
 
-    def remove_player(self, idx, *args, **kwargs):
+    def remove_player(self, *args, **kwargs):
         pass
 
     def end_condition(self, *args, **kwargs):
         pass
 
-    def play_turn(self, *args, **kwargs):
+    def play(self, *args, **kwargs):
         pass
 
     def update_turn(self, *args, **kwargs):

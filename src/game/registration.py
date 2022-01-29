@@ -14,6 +14,8 @@ class ChainGame(Game):
     """
     player_names = set()
     board = None
+    min_players = 2
+    max_players = 2
 
     def __init__(self, players: List[Player], board: Board):
         """
@@ -29,6 +31,11 @@ class ChainGame(Game):
             self.player_names = set(p.name for p in players)
         else:
             raise ValueError('Player names not unique')
+
+        if self.min_players <= len(players) <= self.max_players:
+            raise ValueError('Number of players not allowed. Min: %s, Max: %s, supplied: %s' % (self.min_players,
+                                                                                                self.max_players,
+                                                                                                len(players)))
 
         self.board = board
 

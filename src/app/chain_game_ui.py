@@ -4,7 +4,31 @@ from common.factory import BoardFactory, GameFactory, PlayerFactory
 from player.interface import Player
 
 
-def add_player_popup(game, players_by_game) -> List[Player]:
+def info_popup(text):
+    """
+    Information popup
+    :param text:
+    :return:
+    """
+    layout = [
+        [sg.Text(text)]
+    ]
+
+    # Create the window
+    window = sg.Window("Winners", layout)
+
+    # Create an event loop
+    while True:
+        event, values = window.read()
+        # End program if user closes window or
+        # presses the OK button
+        if event == sg.WIN_CLOSED:
+            break
+
+    window.close()
+
+
+def add_player_popup(game, players_by_game, curr_num_players) -> List[Player]:
     """
     Creates a pop up with a drop down menu of player types for the game. The user selects a player type, types a name
     and hits the add button. When done adding players hit the add button.
@@ -13,6 +37,7 @@ def add_player_popup(game, players_by_game) -> List[Player]:
     :param players_by_game: a dictionary of players types by game
     :return: a list of players to be added to the game
     """
+    game_cls = GameFactory.registry[game]
     player_types = players_by_game[game] # get the player types for this game
 
     # layout of the pop up gui
@@ -37,10 +62,13 @@ def add_player_popup(game, players_by_game) -> List[Player]:
         if event == sg.WIN_CLOSED or event == 'Done':
             break
         elif event == 'button_add_player':
-            # create the player and add it to the list of players to be added
-            player = PlayerFactory.create(values['player_type'], name=values['player_name'])
-            player.gui_setup()
-            players.append(player)
+            if curr_num_players + len(players) + 1 > game_cls.max_players:
+                info_popup('Number of players already at max %s, please remove players first' % game_cls.max_players)
+            else:
+                # create the player and add it to the list of players to be added
+                player = PlayerFactory.create(values['player_type'], name=values['player_name'])
+                player.gui_setup()
+                players.append(player)
 
     window.close()
     return players
@@ -138,10 +166,11 @@ def chain_game_ui():
             break
         elif event == 'add_player':
             # if the add button is clicked, create a add player popup and update the players list
-            new_players = add_player_popup(values['Game'], players_by_game)
+            new_players = add_player_popup(values['Game'], players_by_game, len(players_list))
             players_list += new_players
             player_names += [p.name for p in new_players]
             window['Player List'].update([name + ': 0' for name in player_names])
+            window['replay'].update(disabled=True)  # disable the replay button
         elif event == 'remove_player':
             # if the remove button is clicked, remove the selected players and update the players list
             p_name = values['Player List']
@@ -151,41 +180,45 @@ def chain_game_ui():
                 player_names.pop(idx)
                 players_list.pop(idx)
             window['Player List'].update([name + ': 0' for name in player_names])
+            window['replay'].update(disabled=True)  # disable the replay button
         elif event == 'play' or event == 'replay':
             # if the play or replay button is hit start a game
 
             # if play, create a new board and set parameters with popup,
             # then create a new game and set parameters with a pop up
-            if event == 'play':
-                board = BoardFactory.create(values['Board'])
-                board.gui_setup()
-                game = GameFactory.create(values['Game'], players=players_list, board=board)
-                game.gui_setup()
-            else:  # if replay was hit reset the game, this will be the same exact board and game as just played
-                game.reset_game()
+            if GameFactory.registry[values['Game']].min_players > len(players_list):
+                info_popup('There must be a minimum of %s players' % GameFactory.registry[values['Game']].min_players)
+            else:
+                if event == 'play':
+                    board = BoardFactory.create(values['Board'])
+                    board.gui_setup()
+                    game = GameFactory.create(values['Game'], players=players_list, board=board)
+                    game.gui_setup()
+                else:  # if replay was hit reset the game, this will be the same exact board and game as just played
+                    game.reset_game()
 
-            # break up the chain and display
-            str_board = [str(x) for x in board.values]
-            window['board_display'].update([', '.join(str_board[i:i+10]) for i in range(0, len(str_board), 10)])
-            window.refresh()
-
-            while not game.end_condition():  # check for the end of the game
-                game.play_turn()  # play a single turn
-
-                # break up the board and update display
-                str_board = [str(x) for x in board.values]
-                window['board_display'].update([', '.join(str_board[i:i + 10]) for i in range(0, len(str_board), 10)])
-
-                # get scores and update players scroll box
-                scores = game.get_scores()
-                window['Player List'].update([name + ': ' + str(score) for name, score in zip(player_names, scores)])
-
+                # break up the chain and display
+                str_board = [str(x) for x in board.values] if board else []
+                window['board_display'].update([', '.join(str_board[i:i+10]) for i in range(0, len(str_board), 10)])
                 window.refresh()
 
-            # get the winners and create a popup
-            winners = game.get_winner()
-            winner_popup(winners)
-            window['replay'].update(disabled=False) # enable the replay button
+                while not game.end_condition():  # check for the end of the game
+                    game.play_turn()  # play a single turn
+
+                    # break up the board and update display
+                    str_board = [str(x) for x in board.values] if board else []
+                    window['board_display'].update([', '.join(str_board[i:i + 10]) for i in range(0, len(str_board), 10)])
+
+                    # get scores and update players scroll box
+                    scores = game.get_scores()
+                    window['Player List'].update([name + ': ' + str(score) for name, score in zip(player_names, scores)])
+
+                    window.refresh()
+
+                # get the winners and create a popup
+                winners = game.get_winner()
+                winner_popup(winners)
+                window['replay'].update(disabled=False) # enable the replay button
 
     window.close()
 

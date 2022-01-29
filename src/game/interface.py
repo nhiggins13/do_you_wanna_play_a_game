@@ -11,6 +11,8 @@ class Game(ABC):
     """
     players: List[Player] = []
     current_player: int = None
+    min_players = 1
+    max_players = float('inf')
 
     @abstractmethod
     def __init__(self):

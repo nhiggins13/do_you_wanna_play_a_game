@@ -21,7 +21,7 @@ class TestPlayer(unittest.TestCase):
         player = self.player_cls()
         last_unique_id = player.name.split('_')[1]
         player = self.player_cls()
-        assert 'Player_' + str(int(last_unique_id)+1) == 'Player_1'
+        assert 'Player_' + str(int(last_unique_id)+1) == player.name
 
     def test_reset(self):
         player = self.player_cls(*self.args, **self.kwargs)

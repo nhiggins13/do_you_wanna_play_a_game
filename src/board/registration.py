@@ -1,3 +1,5 @@
+import time
+
 from src.board.interface import Board
 from collections import deque
 from numpy.random import RandomState
@@ -12,13 +14,11 @@ class ChainBoard(Board):
     random_state = None
 
     def __init__(self, length=5, seed=None, minimum=-100, maximum=100):
-        self.initialize(length, seed, minimum, maximum)
-
-    def initialize(self, length=5, seed=None, minimum=-100, maximum=100):
         self.min = minimum
         self.max = maximum
-        self.seed = seed
-        self.random_state = RandomState(seed)
+        self.length = length
+        self.seed = int(time.time()) if seed is None else seed
+        self.random_state = RandomState(self.seed)
         self.values = deque([self.random_state.randint(minimum, maximum) for _ in range(length)])
 
     def interact(self, side):
@@ -31,4 +31,15 @@ class ChainBoard(Board):
         return self.values.pop()
 
     def reset(self):
-        self.initialize(length=len(self.values), seed=self.seed, minimum=self.min, maximum=self.max)
+        self.random_state = RandomState(self.seed)
+        self.values = deque([self.random_state.randint(self.min, self.max) for _ in range(self.length)])
+
+    def get_params(self):
+        params = super().get_params()
+        params['minimum'] = (self.min, 'Minimum value in chain', int)
+        params['maximum'] = (self.max, 'Maximum value in chain', int)
+        params['length'] = (self.length, 'Length of chain', int)
+        params['seed'] = (self.seed, 'Random seed', int)
+
+        return params
+

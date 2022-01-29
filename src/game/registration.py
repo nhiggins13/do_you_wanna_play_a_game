@@ -5,11 +5,18 @@ from game.interface import Game
 
 @register('ChainGame', GameFactory)
 class ChainGame(Game):
-    board_seed = 1234
     player_names = set()
+    board = None
 
-    def __init__(self, players, board='ChainBoard', board_kwargs={}):
-        self.set_up(players, board, board_kwargs)
+    def __init__(self, players, board):
+        self.current_player = 0
+        if self._check_unique_player_names(players):
+            self.players = players
+            self.player_names = set(p.name for p in players)
+        else:
+            raise ValueError('Player names not unique')
+
+        self.board = board
 
     def _check_unique_player_names(self, players):
         if isinstance(players, list):
@@ -20,21 +27,6 @@ class ChainGame(Game):
             return False
 
         return True
-
-    def set_up(self, players, board='ChainBoard', board_kwargs={}):
-        self.current_player = 0
-        if self._check_unique_player_names(players):
-            self.players = players
-            self.player_names = set(p.name for p in players)
-        else:
-            raise ValueError('Player names not unique')
-
-        if 'seed' in board_kwargs:
-            self.board_seed = board_kwargs['seed']
-        else:
-            board_kwargs['seed'] = self.board_seed
-
-        self.board = BoardFactory.create(board, **board_kwargs)
 
     def add_player(self, player):
         if player.name in self.player_names:
@@ -55,15 +47,11 @@ class ChainGame(Game):
     def end_condition(self):
         return True if self.board.values else False
 
-    def play(self):
-
-        while self.end_condition():
-            turn = self.players[self.current_player].play_turn(board=self.board)
-            val = self.board.interact(side=turn)
-            self.players[self.current_player].score += val
-            self.update_turn()
-
-        return self.get_winner()
+    def play_turn(self):
+        turn = self.players[self.current_player].play_turn(board=self.board)
+        val = self.board.interact(side=turn)
+        self.players[self.current_player].score += val
+        self.update_turn()
 
     def update_turn(self):
         self.current_player += 1

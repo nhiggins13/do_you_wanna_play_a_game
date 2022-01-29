@@ -10,7 +10,7 @@ class HumanPlayer(Player):
 
 
 class ChainPlayer(Player):
-    game = 'Chain'
+    game = 'ChainGame'
 
 
 @register('HumanChain', PlayerFactory)
@@ -24,12 +24,18 @@ class HumanChainPlayer(HumanPlayer, ChainPlayer):
 @register('OneSidedChainBot', PlayerFactory)
 class OneSidedChainBot(ChainPlayer):
 
-    def __init__(self, side='L', **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, side='L', *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.side = side
 
     def play_turn(self, *args, **kwargs):
         return self.side
+
+    def get_params(self):
+        params = super().get_params()
+        params['side'] = ('L', 'Side the bot chooses L or R', str)
+
+        return params
 
 
 @register('GreedyChainBot', PlayerFactory)
@@ -49,8 +55,9 @@ class GreedyChainBot(ChainPlayer):
 @register('RandomChainBot', PlayerFactory)
 class RandomChainBot(ChainPlayer):
 
-    def __init__(self, seed, **kwargs):
+    def __init__(self, seed=123, **kwargs):
         super().__init__(**kwargs)
+        self.seed = seed
         self.random_state = RandomState(seed)
 
     def play_turn(self, *args, **kwargs):
@@ -58,3 +65,13 @@ class RandomChainBot(ChainPlayer):
             return 'L'
         else:
             return 'R'
+
+    def reset(self):
+        super().reset()
+        self.random_state = RandomState(self.seed)
+
+    def get_params(self):
+        params = super().get_params()
+        params['seed'] = (self.seed, 'Random seed', int)
+
+        return params

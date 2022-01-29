@@ -146,7 +146,8 @@ def chain_game_ui():
 
             while game.end_condition():
                 game.play_turn()
-                window['board_display'].update([', '.join([str(x) for x in board.values])])
+                str_board = [str(x) for x in board.values]
+                window['board_display'].update([', '.join(str_board[i:i + 10]) for i in range(0, len(str_board), 10)])
                 scores = game.get_scores()
                 window['Player List'].update([name + ': ' + str(score) for name, score in zip(player_names, scores)])
 

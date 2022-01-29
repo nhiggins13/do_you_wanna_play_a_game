@@ -35,10 +35,11 @@ class ModelFactory(object):
     @classmethod
     def create(self, label: str, *args: Any, **kwargs: Any):
         """
+        creates the object of the class registered
 
-        :param label:
-        :param args:
-        :param kwargs:
+        :param label: name of the class
+        :param args: positional arguments for the class
+        :param kwargs: key word arguments for the class
         :return:
         """
 
@@ -58,6 +59,12 @@ class ModelFactory(object):
 
     @classmethod
     def register(self, label: str, klass):
+        """
+        register a class to a label
+        :param label: name of the class
+        :param klass: class
+        :return:
+        """
         if not isinstance(label, str):
             raise ValueError('label %s not a string')
 
@@ -72,12 +79,15 @@ class ModelFactory(object):
 
 
 def register(class_name: str, factory: ModelFactory):
+    """
+    Decorator class to register classes to the appropriate factory
+    :param class_name: name used to register class
+    :param factory: factory to be registered to
+    :return:
+    """
 
     def _decorator(klass: Any) -> Any:
         factory.register(class_name, klass)
         return klass
 
     return _decorator
-
-
-test = make_factory_class('test')

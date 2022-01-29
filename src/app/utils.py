@@ -3,7 +3,7 @@ from typing import Dict
 import PySimpleGUI as sg
 
 
-def player_ui_setup(parameters: dict):
+def ui_setup(parameters: dict):
     layout = []
     for parameter, (val, descr, cls) in parameters.items():
         layout.append([sg.Text(descr), sg.Input(default_text=val, key=parameter)])

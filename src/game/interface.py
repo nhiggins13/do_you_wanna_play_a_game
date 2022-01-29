@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from app.player_ui_setup import player_ui_setup
+from app.utils import ui_setup
 from src.player.interface import Player
 
 
@@ -46,5 +46,5 @@ class Game(ABC):
     def gui_setup(self):
         params = self.get_params()
         if params:
-            new_params = player_ui_setup(params)
+            new_params = ui_setup(params)
             self.__init__(**new_params)

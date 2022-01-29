@@ -169,7 +169,7 @@ def chain_game_ui():
             window['board_display'].update([', '.join(str_board[i:i+10]) for i in range(0, len(str_board), 10)])
             window.refresh()
 
-            while game.end_condition():  # check for the end of the game
+            while not game.end_condition():  # check for the end of the game
                 game.play_turn()  # play a single turn
 
                 # break up the board and update display

@@ -16,12 +16,18 @@ class Player(ABC):
 
     _idCounter = 0
 
-    def __init__(self, name):
+    def __init__(self, name=None):
         # set the name and create unique name if default is used
         if name:
             self.name = name
         else:
-            name += str(self._idCounter)
+            self.name = Player.unique_name()
+
+    @classmethod
+    def unique_name(cls):
+        new_name = cls.name + '_' + str(cls._idCounter)
+        cls._idCounter += 1
+        return new_name
 
     def reset(self):
         """

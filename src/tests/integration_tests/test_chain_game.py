@@ -31,7 +31,7 @@ class TestChainGame(unittest.TestCase):
         for i in range(100):
             self.board = ChainBoard(seed=i)
             game = ChainGame(players=self.players, board=self.board)
-            while game.end_condition():
+            while not game.end_condition():
                 game.play_turn()
 
             winners = [p.name for p in game.get_winner()]

@@ -61,7 +61,7 @@ class OneSidedChainBot(ChainPlayer):
         :return: a dictionary of the initialization parameters of the board
         """
         params = super().get_params()
-        params['side'] = ('L', 'Side the bot chooses L or R', str)
+        params['side'] = (self.side, 'Side the bot chooses L or R', str)
 
         return params
 

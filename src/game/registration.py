@@ -83,7 +83,7 @@ class ChainGame(Game):
         checks if the board has items left
         :return:
         """
-        return True if self.board.values else False
+        return False if self.board.values else True
 
     def play_turn(self):
         """

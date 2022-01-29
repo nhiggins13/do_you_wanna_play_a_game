@@ -7,9 +7,25 @@ from player.registration import OneSidedChainBot, GreedyChainBot
 
 class TestChainGame(unittest.TestCase):
     def setUp(self):
-        self.players = [OneSidedChainBot(name='Lefty', side='L'), GreedyChainBot(name='Greedy')]
+        self.players = [GreedyChainBot(name='Greedy1'), GreedyChainBot(name='Greedy2')]
 
     def test_game(self):
+        targets = [['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'],
+                   ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'],
+                   ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'],
+                   ['Greedy1'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'],
+                   ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy2'], ['Greedy1'], ['Greedy1'], ['Greedy1'],
+                   ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'],
+                   ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'],
+                   ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'],
+                   ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'],
+                   ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'],
+                   ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'],
+                   ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'],
+                   ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'],
+                   ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'], ['Greedy1'],
+                   ['Greedy1'], ['Greedy1']]
+
 
         # play 100 games and check that the results are the same
         for i in range(100):
@@ -19,8 +35,4 @@ class TestChainGame(unittest.TestCase):
                 game.play_turn()
 
             winners = [p.name for p in game.get_winner()]
-
-            if i == 0:
-                assert winners == ['Lefty']
-            else:
-                assert winners == ['Greedy']
+            assert winners == targets[i]

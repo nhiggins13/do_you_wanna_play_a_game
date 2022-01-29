@@ -12,7 +12,7 @@ def make_factory_class(factory_name: str, factory_label_enum: Optional[Type[enum
     :return:  A ModelFactory derived class
     """
 
-    class _NewFactory(ModelFactory):
+    class _NewFactory(Factory):
         label = factory_label_enum
         registry: Dict[str, type] = dict()
 
@@ -20,7 +20,7 @@ def make_factory_class(factory_name: str, factory_label_enum: Optional[Type[enum
     return _NewFactory
 
 
-class ModelFactory(object):
+class Factory(object):
     """
     Factory base class that provides class method implementations
     for common functionality for all derived factory classes
@@ -78,7 +78,7 @@ class ModelFactory(object):
             logger.debug('"%s" registered in %s' % (label, self.__name__))
 
 
-def register(class_name: str, factory: ModelFactory):
+def register(class_name: str, factory: Factory):
     """
     Decorator class to register classes to the appropriate factory
     :param class_name: name used to register class

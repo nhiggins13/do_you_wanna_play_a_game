@@ -126,10 +126,11 @@ def chain_game_ui():
         elif event == 'remove_player':
             p_name = values['Player List']
             for p in p_name:
-                idx = player_names.index(p)
+                colon_idx = p.index(':')
+                idx = player_names.index(p[:colon_idx])
                 player_names.pop(idx)
                 players_list.pop(idx)
-            window['Player List'].update(player_names)
+            window['Player List'].update([name + ': 0' for name in player_names])
         elif event == 'play' or event == 'replay':
 
             if event == 'play':

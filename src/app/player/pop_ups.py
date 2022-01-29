@@ -1,3 +1,5 @@
+import os
+
 import PySimpleGUI as sg
 
 
@@ -8,7 +10,8 @@ def choose_left_right(name):
     ]
 
     # Create the window
-    window = sg.Window("Pick a Side", layout)
+    loc = [int(coord) for coord in os.environ['popup_loc'].split(',')] if 'popup_loc' in os.environ else (None, None)
+    window = sg.Window("Pick a Side", layout, location=loc)
 
     result = 'L'
     # Create an event loop
@@ -23,5 +26,6 @@ def choose_left_right(name):
                 result = 'R'
             break
 
+    os.environ['popup_loc'] = ','.join([str(x) for x in window.current_location()])
     window.close()
     return result

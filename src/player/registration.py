@@ -1,4 +1,3 @@
-from abc import ABC
 from numpy.random import RandomState
 
 from app.player.pop_ups import choose_left_right
@@ -18,7 +17,6 @@ class ChainPlayer(Player):
 @register('HumanChain', PlayerFactory)
 class HumanChainPlayer(HumanPlayer, ChainPlayer):
     def play_turn(self, *args, **kwargs):
-        print(kwargs['board'].values)
         side = choose_left_right(self.name)
         return side
 

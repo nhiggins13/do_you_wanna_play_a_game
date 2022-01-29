@@ -17,8 +17,12 @@ class ChainBoard(Board):
         self.min = minimum
         self.max = maximum
         self.seed = int(time.time()) if seed is None else seed
+        self._create_values()
+
+    def _create_values(self):
         self.random_state = RandomState(self.seed)
-        self.values = deque([self.random_state.randint(minimum, maximum) for _ in range(self.random_state.randint(5, 100))])
+        self.values = deque(
+            [self.random_state.randint(self.min, self.max) for _ in range(self.random_state.randint(5, 100))])
 
     def interact(self, side):
         if side not in ('L', 'R'):
@@ -30,8 +34,7 @@ class ChainBoard(Board):
         return self.values.pop()
 
     def reset(self):
-        self.random_state = RandomState(self.seed)
-        self.values = deque([self.random_state.randint(self.min, self.max) for _ in range(self.length)])
+        self._create_values()
 
     def get_params(self):
         params = super().get_params()

@@ -3,8 +3,13 @@ import PySimpleGUI as sg
 
 def winner_popup(winners):
     winner_names = [p.name for p in winners]
+    if len(winners) > 1:
+        text = 'The winners are %s!' % winner_names
+    else:
+        text = 'The winner is %s' % winner_names[0]
+
     layout = [
-        [sg.Text('The winners are %s!' % winner_names)]
+        [sg.Text(text)]
     ]
 
     # Create the window

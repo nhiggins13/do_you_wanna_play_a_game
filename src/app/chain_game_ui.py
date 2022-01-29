@@ -18,7 +18,7 @@ def chain_game_ui():
     for key, p in PlayerFactory.registry.items():
         players_by_game[p.game].append(key)
 
-    player_scoll = sg.Listbox(values=player_names, select_mode=sg.SELECT_MODE_EXTENDED, size=(10, 10),
+    player_scoll = sg.Listbox(values=player_names, select_mode=sg.SELECT_MODE_EXTENDED, size=(14, 10),
                               key='Player List')
 
     board_display = sg.Listbox(values=[], size=(47, 10),  key='board_display')
@@ -32,7 +32,7 @@ def chain_game_ui():
     layout = [
         [sg.Text('Game:', size=19), sg.Text('Board:', size=20)],
         [game_drop_down, board_drop_down],
-        [sg.Text('Players:', size=11), sg.Text('Current Board:', size=19)],
+        [sg.Text('Players and Scores:', size=14), sg.Text('Current Board:', size=19)],
         [player_scoll, board_display],
         [sg.Button('Add Player', key="add_player", size=(12, 2)),
          sg.Button('Remove Player', key="remove_player", size=(12, 2)),
@@ -54,7 +54,7 @@ def chain_game_ui():
             new_players = add_player_popup(values['Game'], players_by_game)
             players_list += new_players
             player_names += [p.name for p in new_players]
-            window['Player List'].update(player_names)
+            window['Player List'].update([name + ': 0' for name in player_names])
         elif event == 'remove_player':
             p_name = values['Player List']
             for p in p_name:
@@ -72,12 +72,16 @@ def chain_game_ui():
             else:
                 game.reset_game()
 
-            window['board_display'].update([', '.join([str(x) for x in board.values])])
+            str_board = [str(x) for x in board.values]
+            window['board_display'].update([', '.join(str_board[i:i+10]) for i in range(0, len(str_board), 10)])
             window.refresh()
 
             while game.end_condition():
                 game.play_turn()
                 window['board_display'].update([', '.join([str(x) for x in board.values])])
+                scores = game.get_scores()
+                window['Player List'].update([name + ': ' + str(score) for name, score in zip(player_names, scores)])
+
                 window.refresh()
             winners = game.get_winner()
             winner_popup(winners)

@@ -37,6 +37,9 @@ class Game(ABC):
     def get_winner(self, *args, **kwargs):
         pass
 
+    def get_scores(self):
+        return [p.score for p in self.players]
+
     def get_params(self):
         return {}
 

@@ -1,0 +1,2 @@
+PySimpleGUI~=4.56.0
+numpy~=1.19.3

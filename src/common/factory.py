@@ -1,4 +1,4 @@
-from src.common.utils import make_factory_class
+from common.utils import make_factory_class
 
 # create factories
 BoardFactory = make_factory_class('BoardFactory')

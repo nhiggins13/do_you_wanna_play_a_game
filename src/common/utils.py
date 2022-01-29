@@ -1,6 +1,6 @@
 import enum
 import logging
-from typing import Union, Any, Dict, Optional, Type
+from typing import Any, Dict, Optional, Type
 
 
 def make_factory_class(factory_name: str, factory_label_enum: Optional[Type[enum.Enum]] = None):

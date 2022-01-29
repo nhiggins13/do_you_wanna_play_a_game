@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from app.utils import ui_setup
-from src.player.interface import Player
+from player.interface import Player
 
 
 class Game(ABC):

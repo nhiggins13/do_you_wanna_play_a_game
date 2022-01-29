@@ -1,6 +1,6 @@
 import time
 
-from src.board.interface import Board
+from board.interface import Board
 from collections import deque
 from numpy.random import RandomState
 from common.utils import register

@@ -73,5 +73,5 @@ class Game(ABC):
         """
         params = self.get_params()
         if params:
-            new_params = ui_setup(params)
+            new_params = ui_setup(params, 'Game')
             self.__init__(**new_params)

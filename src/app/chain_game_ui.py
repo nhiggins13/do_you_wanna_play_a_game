@@ -190,6 +190,3 @@ def chain_game_ui():
     window.close()
 
 
-if __name__ == '__main__':
-    chain_game_ui()
-

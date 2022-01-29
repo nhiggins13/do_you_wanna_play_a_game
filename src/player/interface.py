@@ -61,5 +61,5 @@ class Player(ABC):
         """
         params = self.get_params()
         if len(params) > 1:
-            new_params = ui_setup(params)
+            new_params = ui_setup(params, 'Player')
             self.__init__(**new_params)

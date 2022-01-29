@@ -3,7 +3,7 @@ from typing import Dict
 import PySimpleGUI as sg
 
 
-def ui_setup(parameters: dict) -> dict:
+def ui_setup(parameters: dict, object_type='') -> dict:
     """
     Creates a popup with the changeable input parameters and their current values. When the done button is clicked
     the user input values are taken, attempted to be converted to the right type and returned in a dictionary
@@ -21,7 +21,7 @@ def ui_setup(parameters: dict) -> dict:
     layout.append([sg.Button(button_text='Done', key='Done')])
 
     # Create the window
-    window = sg.Window("Set Up Player", layout)
+    window = sg.Window("Set Up %s" % object_type, layout)
 
     new_parameters = {key: None for key in parameters.keys()}
     # Create an event loop

@@ -41,5 +41,5 @@ class Board(ABC):
         """
         params = self.get_params()  # get the initialization parameters
         if params:
-            new_params = ui_setup(params)  # create the pop up and get the new parameters
+            new_params = ui_setup(params, 'Board')  # create the pop up and get the new parameters
             self.__init__(**new_params)  # reinitialize the object
